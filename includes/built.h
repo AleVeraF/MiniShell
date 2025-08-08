@@ -7,9 +7,11 @@
 
 // CD
 int ft_cd(t_cmd *cmd, t_shell *shell);
-char *resolve_cd_argument(char *arg, char *path_buffer);
-void update_pwd_and_oldpwd(void);
+char *ft_getenv(char **envp, const char *key);
+void ft_setenv(char ***envp, const char *key, const char *value);
+char *resolve_cd_argument(char *arg, char *path_buffer, t_shell *shell);
 char *resolve_cd_target(t_cmd *cmd, t_shell *shell);
+void update_pwd_and_oldpwd(t_shell *shell);
 // CD FIN
 
 

@@ -7,7 +7,7 @@ INCLUDES    = -I includes
 READLINE_INC = -I/opt/homebrew/opt/readline/include
 READLINE_LIB = -L/opt/homebrew/opt/readline/lib -lreadline
 
-SRCS        = srcs/main.c srcs/signals.c srcs/shell.c srcs/main_aux.c srcs/main_aux_input.c srcs/tokenizer.c srcs/tokenizer_aux.c srcs/tokenizer_join.c srcs/tokenizer_join_ppal.c srcs/debuger_temp.c srcs/handle_quotes.c srcs/parser.c srcs/parser_check.c srcs/parser_aux.c srcs/parser_extension.c srcs/executor_aux.c srcs/executor.c srcs/general_aux.c built/echo.c  
+SRCS        = srcs/main.c srcs/signals.c srcs/shell.c srcs/main_aux.c srcs/main_aux_input.c srcs/tokenizer.c srcs/tokenizer_aux.c srcs/tokenizer_join.c srcs/tokenizer_join_ppal.c srcs/debuger_temp.c srcs/handle_quotes.c srcs/parser.c srcs/parser_check.c srcs/parser_aux.c srcs/parser_extension.c srcs/executor_aux.c srcs/executor.c srcs/general_aux.c built/echo.c built/builtin_cd.c built/builtin_env.c built/builtin_exit.c built/builtin_export.c built/builtin_pwd.c built/builtin_unset.c 
 OBJS        = $(SRCS:.c=.o)
 
 HEADERS     = includes/minishell.h includes/shell.h includes/tokenizer.h includes/parser.h includes/status.h includes/signals.h includes/main_aux.h

@@ -1,40 +1,56 @@
 #include "minishell.h"
 // Busca el valor de una variable
-char *ft_getenv(t_env *env, const char *key)
+char *ft_getenv(char **envp, const char *key)
 {
-	while (env)
-	{
-		if (strcmp(env->key, key) == 0)
-			return env->value;
-		env = env->next;
-	}
-	return NULL;
+    int key_len = strlen(key);
+
+    while (*envp)
+    {
+        if (strncmp(*envp, key, key_len) == 0 && (*envp)[key_len] == '=')
+            return *envp + key_len + 1; // Retorna la parte del valor después de '='
+        envp++;
+    }
+    return NULL;
 }
 
+
 // Agrega o modifica una variable del entorno
-void ft_setenv(t_env **env, const char *key, const char *value)
+void ft_setenv(char ***envp, const char *key, const char *value)
 {
-	t_env *current = *env;
+    int key_len = strlen(key);
+    int i = 0;
 
-	while (current)
-	{
-		if (strcmp(current->key, key) == 0)
-		{
-			free(current->value);
-			current->value = ft_strdup(value);
-			return;
-		}
-		current = current->next;
-	}
+    // Buscar si la clave ya existe
+    while ((*envp)[i])
+    {
+        if (strncmp((*envp)[i], key, key_len) == 0 && (*envp)[i][key_len] == '=')
+        {
+            // Reemplazar
+            free((*envp)[i]);
+            (*envp)[i] = malloc(strlen(key) + strlen(value) + 2); // +1 para '=' y +1 para '\0'
+            if (!(*envp)[i])
+                return;
+            sprintf((*envp)[i], "%s=%s", key, value);
+            return;
+        }
+        i++;
+    }
 
-	// No existe: crear nuevo nodo
-	t_env *new = malloc(sizeof(t_env));
-	if (!new)
-		return;
-	new->key = ft_strdup(key);
-	new->value = ft_strdup(value);
-	new->next = *env;
-	*env = new;
+    // No existe, agregar nuevo
+    char **new_envp = malloc(sizeof(char *) * (i + 2));
+    if (!new_envp)
+        return;
+    for (int j = 0; j < i; j++)
+        new_envp[j] = (*envp)[j];
+    
+    new_envp[i] = malloc(strlen(key) + strlen(value) + 2);
+    if (!new_envp[i])
+        return;
+    sprintf(new_envp[i], "%s=%s", key, value);
+    new_envp[i + 1] = NULL;
+
+    free(*envp); // Ojo: solo si tienes el control total de `envp`
+    *envp = new_envp;
 }
 
 char *resolve_cd_target(t_cmd *cmd, t_shell *shell)

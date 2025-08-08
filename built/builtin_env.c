@@ -7,28 +7,27 @@
 */
 int	ft_env(t_cmd *cmd, t_shell *shell)
 {
-	t_env	*env;
+	char **env;
 
 	if (cmd->argv[1])
 	{
 		write(2, "env: '", 6);
 		write(2, cmd->argv[1], ft_strlen(cmd->argv[1]));
 		write(2, "': No such file or directory\n", 30);
-		shell->exit_status = 127;
+		shell->last_status = 127;
 		return (1);
 	}
 	env = shell->envp;
-	while (env)
+	while (*env)
 	{
-		if (env->value)
+		// Solo imprimimos si hay '=' en la variable
+		if (ft_strchr(*env, '='))
 		{
-			write(1, env->key, ft_strlen(env->key));
-			write(1, "=", 1);
-			write(1, env->value, ft_strlen(env->value));
+			write(1, *env, ft_strlen(*env));
 			write(1, "\n", 1);
 		}
-		env = env->next;
+		env++;
 	}
-	shell->exit_status = 0;
+	shell->last_status = 0;
 	return (0);
 }
