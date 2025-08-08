@@ -35,10 +35,11 @@ void	print_export_error(char *arg);
 
 int	ft_env(t_cmd *cmd, t_shell *shell);
 int ft_exit(t_cmd *cmd, t_shell *shell);
-void	free_env_list(t_env *env);
+void free_env_array(char **envp);
 
 // Función para ejecutar built-ins
 int exec_builtin(t_cmd *cmd, t_shell *shell);
+char *get_env_value(char *var, t_shell *shell);
 
 
 int	ft_unset(t_cmd *cmd, t_shell *shell);

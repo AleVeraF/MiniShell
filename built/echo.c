@@ -26,7 +26,7 @@ static int check_valid_nflag(char *arg)
 /**
  * get_env_value - busca una variable de entorno dentro del shell
  */
-static char *get_env_value(char *var, t_shell *shell)
+char *get_env_value(char *var, t_shell *shell)
 {
     int i;
     size_t len;
