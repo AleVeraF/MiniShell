@@ -2,11 +2,11 @@
 // Busca el valor de una variable
 char *ft_getenv(char **envp, const char *key)
 {
-    int key_len = strlen(key);
+    int key_len = ft_strlen(key);
 
     while (*envp)
     {
-        if (strncmp(*envp, key, key_len) == 0 && (*envp)[key_len] == '=')
+        if (ft_strncmp(*envp, key, key_len) == 0 && (*envp)[key_len] == '=')
             return *envp + key_len + 1; // Retorna la parte del valor después de '='
         envp++;
     }
@@ -17,7 +17,7 @@ char *ft_getenv(char **envp, const char *key)
 // Agrega o modifica una variable del entorno
 void ft_setenv(char ***envp, const char *key, const char *value)
 {
-    int key_len = strlen(key);
+    int key_len = ft_strlen(key);
     int i = 0;
 
     // Buscar si la clave ya existe
@@ -27,7 +27,7 @@ void ft_setenv(char ***envp, const char *key, const char *value)
         {
             // Reemplazar
             free((*envp)[i]);
-            (*envp)[i] = malloc(strlen(key) + strlen(value) + 2); // +1 para '=' y +1 para '\0'
+            (*envp)[i] = malloc(strlen(key) + ft_strlen(value) + 2); // +1 para '=' y +1 para '\0'
             if (!(*envp)[i])
                 return;
             sprintf((*envp)[i], "%s=%s", key, value);
@@ -43,7 +43,7 @@ void ft_setenv(char ***envp, const char *key, const char *value)
     for (int j = 0; j < i; j++)
         new_envp[j] = (*envp)[j];
     
-    new_envp[i] = malloc(strlen(key) + strlen(value) + 2);
+    new_envp[i] = malloc(ft_strlen(key) + ft_strlen(value) + 2);
     if (!new_envp[i])
         return;
     sprintf(new_envp[i], "%s=%s", key, value);
@@ -84,8 +84,8 @@ char *resolve_cd_argument(char *arg, char *path_buffer, t_shell *shell)
             write(STDERR_FILENO, "cd: variable HOME no establecida\n", 33);
             return NULL;
         }
-        strcpy(path_buffer, home);
-        strcat(path_buffer, arg + 1);
+            strcpy(path_buffer, home);
+            strcat(path_buffer, arg + 1);
         return path_buffer;
     }
 
