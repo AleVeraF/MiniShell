@@ -17,6 +17,7 @@
 
 
 /* Inicializa el estado del shell */
+char	**copy_env(char **envp);
 void	init_shell(t_shell *shell, char **envp);
 
 /* Libera los recursos del shell al terminar */

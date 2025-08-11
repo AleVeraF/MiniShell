@@ -27,7 +27,6 @@ int builtin_export(t_cmd *cmd, t_shell *shell);
 int	is_valid_identifier(char *str);
 t_env	*create_env_node(char *key, char *value);
 t_env	*add_export_var(t_env *env_list, char *arg);
-int	print_exported_vars(t_env *env);
 void	print_export_error(char *arg);
 
 

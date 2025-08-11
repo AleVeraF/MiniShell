@@ -1,7 +1,8 @@
 #include "minishell.h"
+
 /*
-** Verifica si el nombre de la variable es válido.
-** Retorna 1 si es válido, 0 si es inválido.
+** is_valid_identifier:
+** Comprueba si el nombre de variable es válido (sin el valor).
 */
 int	is_valid_identifier(char *str)
 {
@@ -27,168 +28,189 @@ int	is_valid_identifier(char *str)
 }
 
 /*
-** Crea un nuevo nodo del tipo t_env con su clave y valor.
+** find_env_index:
+** Busca la posición de una variable por su clave (KEY).
 */
-t_env	*create_env_node(char *key, char *value)
+static int	find_env_index(char **envp, char *key)
 {
-	t_env	*new;
+	int		i;
+	size_t	len;
 
-	new = malloc(sizeof(t_env));
-	if (!new)
-		return (NULL);
-	new->key = ft_strdup(key);
-	if (value)
-		new->value = ft_strdup(value);
-	else
-		new->value = NULL;
-	new->next = NULL;
-	return (new);
-}
-
-
-t_env	*find_env_var(t_env *env, const char *key)
-{
-	while (env)
+	len = ft_strlen(key);
+	i = 0;
+	while (envp[i])
 	{
-		if (strcmp(env->key, key) == 0)
-			return (env);
-		env = env->next;
+		if (ft_strncmp(envp[i], key, len) == 0 && envp[i][len] == '=')
+			return (i);
+		i++;
 	}
-	return (NULL);
+	return (-1);
 }
 
 /*
-** Añade una nueva variable al principio de la lista de export.
-** Si hay '=', guarda clave y valor; si no, solo la clave.
+** ft_realloc_envp:
+** Añade una variable nueva al final del array envp.
 */
+static char	**ft_realloc_envp(char **envp, char *new_var)
+{
+	int		count;
+	char	**new_envp;
+	int		i;
 
-/**
- * create_new_export_node - crea un nuevo nodo export con key y valor
- */
- static t_env	*create_new_export_node(char *key, char *val)
- {
-	 t_env	*new;
- 
-	 new = malloc(sizeof(t_env));
-	 if (!new)
-	 {
-		 free(key);
-		 free(val);
-		 return (NULL);
-	 }
-	 new->key = key;
-	 new->value = val;
-	 new->next = NULL;
-	 return (new);
- }
- 
- /**
-  * update_existing_env_var - actualiza el valor de una variable ya existente
-  */
- static void	update_existing_env_var(t_env *existing, char *val)
- {
-	 free(existing->value);
-	 existing->value = val;
- }
- 
- /**
-  * split_key_value - separa clave y valor desde un argumento con '='
-  */
- static void	split_key_value(char *arg, char **key, char **val)
- {
-	 char	*equal;
- 
-	 equal = ft_strchr(arg, '=');
-	 if (equal)
-	 {
-		 *key = ft_substr(arg, 0, equal - arg);
-		 *val = ft_strdup(equal + 1);
-	 }
-	 else
-	 {
-		 *key = ft_strdup(arg);
-		 *val = NULL;
-	 }
- }
- 
- /**
-  * add_export_var - agrega o actualiza una variable de entorno exportada
-  */
- t_env	*add_export_var(t_env *env_list, char *arg)
- {
-	 char	*key;
-	 char	*val;
-	 t_env	*existing;
-	 t_env	*new;
- 
-	 split_key_value(arg, &key, &val);
-	 existing = find_env_var(env_list, key);
-	 if (existing)
-	 {
-		 if (val)
-			 update_existing_env_var(existing, val);
-		 free(key);
-		 return (env_list);
-	 }
-	 new = create_new_export_node(key, val);
-	 if (!new)
-		 return (env_list);
-	 new->next = env_list;
-	 return (new);
- }
- 
+	count = 0;
+	while (envp && envp[count])
+		count++;
+	new_envp = malloc(sizeof(char *) * (count + 2));
+	if (!new_envp)
+		return (envp);
+	i = 0;
+	while (i < count)
+	{
+		new_envp[i] = envp[i];
+		i++;
+	}
+	new_envp[count] = ft_strdup(new_var);
+	new_envp[count + 1] = NULL;
+	free(envp);
+	return (new_envp);
+}
 
 /*
-** Imprime todas las variables exportadas con formato declare -x.
+** set_env_var:
+** Agrega o actualiza una variable en formato KEY=VALUE.
 */
-int	print_exported_vars(t_env *env)
+static char	**set_env_var(char **envp, char *arg)
 {
-	while (env)
+	char	*equal;
+	char	*key;
+	int		index;
+
+	equal = ft_strchr(arg, '=');
+	if (equal)
+		key = ft_substr(arg, 0, equal - arg);
+	else
+		key = ft_strdup(arg);
+	if (!key)
+		return (envp);
+	index = find_env_index(envp, key);
+	free(key);
+	if (index != -1)
+	{
+		free(envp[index]);
+		envp[index] = ft_strdup(arg);
+		return (envp);
+	}
+	envp = ft_realloc_envp(envp, arg);
+	return (envp);
+}
+
+/*
+** sort_envp:
+** Crea una copia de envp y la ordena alfabéticamente.
+*/
+static char	**sort_envp(char **envp)
+{
+	int		i;
+	int		j;
+	char	*tmp;
+	char	**sorted;
+
+	i = 0;
+	while (envp[i])
+		i++;
+	sorted = malloc(sizeof(char *) * (i + 1));
+	if (!sorted)
+		return (NULL);
+	i = 0;
+	while (envp[i])
+	{
+		sorted[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	sorted[i] = NULL;
+	i = 0;
+	while (sorted[i])
+	{
+		j = i + 1;
+		while (sorted[j])
+		{
+			if (ft_strcmp(sorted[i], sorted[j]) > 0)
+			{
+				tmp = sorted[i];
+				sorted[i] = sorted[j];
+				sorted[j] = tmp;
+			}
+			j++;
+		}
+		i++;
+	}
+	return (sorted);
+}
+
+/*
+** print_exported_vars:
+** Imprime las variables en orden alfabético con formato declare -x.
+*/
+static int	print_exported_vars(char **envp)
+{
+	int		i;
+	char	*equal;
+	char	**sorted;
+
+	sorted = sort_envp(envp);
+	if (!sorted)
+		return (1);
+	i = 0;
+	while (sorted[i])
 	{
 		write(1, "declare -x ", 11);
-		write(1, env->key, strlen(env->key));
-		if (env->value)
+		equal = ft_strchr(sorted[i], '=');
+		if (equal)
 		{
-			write(1, "=\"", 2);
-			write(1, env->value, strlen(env->value));
+			write(1, sorted[i], equal - sorted[i] + 1);
+			write(1, "\"", 1);
+			write(1, equal + 1, ft_strlen(equal + 1));
 			write(1, "\"", 1);
 		}
+		else
+			write(1, sorted[i], ft_strlen(sorted[i]));
 		write(1, "\n", 1);
-		env = env->next;
+		free(sorted[i]);
+		i++;
 	}
+	free(sorted);
 	return (0);
 }
 
 /*
-** Muestra un error si el identificador es inválido.
+** print_export_error:
+** Muestra un error si el identificador no es válido.
 */
 void	print_export_error(char *arg)
 {
 	write(2, "export: `", 9);
-	write(2, arg, strlen(arg));
+	write(2, arg, ft_strlen(arg));
 	write(2, "': not a valid identifier\n", 26);
 }
 
 /*
-** Comando export usando lista enlazada t_cmd para argumentos
-** y t_shell que contiene la lista de variables exportadas.
+** builtin_export:
+** Implementa el comando export usando char **envp en t_shell.
 */
-int builtin_export(t_cmd *cmd, t_shell *shell)
+int	builtin_export(t_cmd *cmd, t_shell *shell)
 {
-    int i;
+	int	i;
 
-    if (!cmd->argv[1])
-        return (print_exported_vars(shell->envp)); // Lista t_env* donde tienes las variables exportadas
-
-    i = 1;
-    while (cmd->argv[i])
-    {
-        if (!is_valid_identifier(cmd->argv[i]))
-            print_export_error(cmd->argv[i]);
-        else
-            shell->envp = add_export_var(shell->envp, cmd->argv[i]); // Aquí agregas/modificas variable
-        i++;
-    }
-    return (0);
+	if (!cmd->argv[1])
+		return (print_exported_vars(shell->envp));
+	i = 1;
+	while (cmd->argv[i])
+	{
+		if (!is_valid_identifier(cmd->argv[i]))
+			print_export_error(cmd->argv[i]);
+		else
+			shell->envp = set_env_var(shell->envp, cmd->argv[i]);
+		i++;
+	}
+	return (0);
 }
-
