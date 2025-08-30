@@ -1,10 +1,4 @@
 #include "minishell.h"
-/*#include "builtins.h"
-#include "../includes/shell.h"
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>*/
 
 static int check_valid_nflag(char *arg)
 {

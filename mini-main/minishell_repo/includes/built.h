@@ -23,6 +23,8 @@ void ft_setenv(char ***envp, const char *key, const char *value);
 char *resolve_cd_argument(char *arg, t_shell *shell);
 char *resolve_cd_target(t_cmd *cmd, t_shell *shell);
 void update_pwd_and_oldpwd(t_shell *shell);
+char *build_env_var(const char *key, const char *value);
+char *expand_home(char *arg, t_shell *shell);
 // CD FIN
 
 // PWD
