@@ -1,7 +1,8 @@
+#include "minishell.h" 
+
 #ifndef BUILT_H
 #define BUILT_H
-
-#include "minishell.h"  // incluye todos los typedefs que necesites, como t_cmd, t_shell, t_env
+ // incluye todos los typedefs que necesites, como t_cmd, t_shell, t_env
 
 // ⚠️ Definición de t_builtin antes de usarlo
 typedef struct s_builtin
@@ -32,8 +33,8 @@ int ft_echo(t_cmd *cmd, t_shell *shell);
 
 // EXPORT
 int builtin_export(t_cmd *cmd, t_shell *shell);
-t_env *create_env_node(char *key, char *value);
-t_env *add_export_var(t_env *env_list, char *arg);
+//t_env *create_env_node(char *key, char *value);
+//t_env *add_export_var(t_env *env_list, char *arg);
 void print_export_error(const char *arg);
 
 // ENV
@@ -48,6 +49,6 @@ int ft_unset(t_cmd *cmd, t_shell *shell);
 
 // Ejecutar builtins
 int exec_builtin(t_cmd *cmd, t_shell *shell);
-char *get_env_value(char *var, t_shell *shell);
+//char *get_env_value(char *var, t_shell *shell);
 
 #endif

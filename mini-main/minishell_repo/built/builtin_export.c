@@ -28,7 +28,7 @@ static char **sort_envp(char **envp)
 }
 
 
-static int is_valid_identifier(const char *str)
+static int is_valid_identifier_aux(const char *str)
 {
 int i;
 
@@ -96,7 +96,7 @@ return (print_exported_vars(shell->envp));
 i = 1;
 while (cmd->argv[i])
 {
-if (!is_valid_identifier(cmd->argv[i]))
+if (!is_valid_identifier_aux(cmd->argv[i]))
 print_export_error(cmd->argv[i]);
 else
 {

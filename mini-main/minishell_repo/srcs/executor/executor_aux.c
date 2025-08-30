@@ -40,19 +40,20 @@ void	execute_builtin(t_cmd *cmd, t_shell *shell)
 	}
 	if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		ft_echo(cmd, shell);
-/*  else if (ft_strcmp(cmd->argv[0], "pwd") == 0)
-        funcion_pwd(cmd, shell);
+    else if (ft_strcmp(cmd->argv[0], "pwd") == 0)
+        ft_pwd(cmd, shell);
     else if (ft_strcmp(cmd->argv[0], "cd") == 0)
-        funcion_cd(cmd, shell);
+        ft_cd(cmd, shell);
     else if (ft_strcmp(cmd->argv[0], "unset") == 0)
-        funcion_unset(cmd, shell);
+        ft_unset(cmd, shell);
     else if (ft_strcmp(cmd->argv[0], "export") == 0)
-        funcion_export(cmd, shell);
+        builtin_export(cmd, shell);
     else if (ft_strcmp(cmd->argv[0], "env") == 0)
-        funcion_env(cmd, shell);
+        ft_env(cmd, shell);
     else if (ft_strcmp(cmd->argv[0], "exit") == 0)
-        funcion_exit(cmd, shell);*/
-	restore_stdin_from_saved(&saved_stdin);
+        ft_exit(cmd, shell);
+	else
+		restore_stdin_from_saved(&saved_stdin);
 }
 
 void	handle_wait_status(int status, t_shell *shell)

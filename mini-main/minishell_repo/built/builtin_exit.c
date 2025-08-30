@@ -38,7 +38,7 @@ free(envp[i++]);
 free(envp);
 }
 
-static int is_numeric(const char *str)
+static int is_numeric_aux(const char *str)
 {
 int i;
 
@@ -77,7 +77,7 @@ if (!cmd->argv[1])
 free_env_array(shell->envp);
 exit(shell->last_status);
 }
-if (!is_numeric(cmd->argv[1]))
+if (!is_numeric_aux(cmd->argv[1]))
 exit_numeric_error(cmd->argv[1], shell);
 if (cmd->argv[2])
 {
