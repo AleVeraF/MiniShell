@@ -1,47 +1,61 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_export.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/03 18:41:55 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/03 18:45:57 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static void print_single_var(const char *var)
+static void	print_single_var(const char *var)
 {
-    char *equal;
+	char	*equal;
 
-    write(1, "declare -x ", 11);
-    equal = ft_strchr(var, '=');
-    if (equal)
-    {
-        write(1, var, equal - var + 1);
-        write(1, "\"", 1);
-        write(1, equal + 1, ft_strlen(equal + 1));
-        write(1, "\"", 1);
-    }
-    else
-        write(1, var, ft_strlen(var));
-    write(1, "\n", 1);
+	write(1, "declare -x ", 11);
+	equal = ft_strchr(var, '=');
+	if (equal)
+	{
+		write(1, var, equal - var + 1);
+		write(1, "\"", 1);
+		write(1, equal + 1, ft_strlen(equal + 1));
+		write(1, "\"", 1);
+	}
+	else
+		write(1, var, ft_strlen(var));
+	write(1, "\n", 1);
 }
-static int print_exported_vars(char **envp)
-{
-    int i;
-    char **sorted;
 
-    sorted = sort_envp(envp);
-    if (!sorted)
-        return (1);
-    i = 0;
-    while (sorted[i])
-    {
-        print_single_var(sorted[i]);
-        free(sorted[i]);
-        i++;
-    }
-    free(sorted);
-    return (0);
+static int	print_exported_vars(char **envp)
+{
+	int		i;
+	char	**sorted;
+
+	sorted = sort_envp(envp);
+	if (!sorted)
+		return (1);
+	i = 0;
+	while (sorted[i])
+	{
+		print_single_var(sorted[i]);
+		free(sorted[i]);
+		i++;
+	}
+	free(sorted);
+	return (0);
 }
-static void handle_export_arg(char *arg, t_shell *shell)
-{
-    char *sep;
-    char *key;
-    char *value;
 
-    if (!is_valid_identifier_aux(arg))
+static void	handle_export_arg(char *arg, t_shell *shell)
+{
+    char	*sep;
+    char	*key;
+    char	*value;
+
+	if (!is_valid_identifier_aux(arg))
     {
         print_export_error(arg);
         return ;
