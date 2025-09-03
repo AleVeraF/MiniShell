@@ -39,7 +39,7 @@ static void sort_envp_custom(char **envp)
     }
 }
 
-static char **sort_envp(char **envp)
+char **sort_envp(char **envp)
 {
     int count = 0;
     char **copy;
@@ -57,7 +57,7 @@ static char **sort_envp(char **envp)
 }
 
 
-static int is_valid_identifier_aux(const char *str)
+int is_valid_identifier_aux(const char *str)
 {
     int i;
 

@@ -35,8 +35,8 @@ int ft_echo(t_cmd *cmd, t_shell *shell);
 
 // EXPORT
 int builtin_export(t_cmd *cmd, t_shell *shell);
-//t_env *create_env_node(char *key, char *value);
-//t_env *add_export_var(t_env *env_list, char *arg);
+char **sort_envp(char **envp);
+int is_valid_identifier_aux(const char *str);
 void print_export_error(const char *arg);
 
 // ENV
