@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alvera-f <alvera-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 18:41:55 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/03 18:45:57 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/03 19:09:07 by alvera-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,37 +51,38 @@ static int	print_exported_vars(char **envp)
 
 static void	handle_export_arg(char *arg, t_shell *shell)
 {
-    char	*sep;
-    char	*key;
-    char	*value;
+	char	*sep;
+	char	*key;
+	char	*value;
 
 	if (!is_valid_identifier_aux(arg))
-    {
-        print_export_error(arg);
-        return ;
-    }
-    sep = ft_strchr(arg, '=');
-    if (sep)
-    {
-        key = ft_substr(arg, 0, sep - arg);
-        value = sep + 1;
-        ft_setenv(&shell->envp, key, value);
-        free(key);
-    }
-    else
-        ft_setenv(&shell->envp, arg, "");
+	{
+		print_export_error(arg);
+		return ;
+	}
+	sep = ft_strchr(arg, '=');
+	if (sep)
+	{
+		key = ft_substr(arg, 0, sep - arg);
+		value = sep + 1;
+		ft_setenv(&shell->envp, key, value);
+		free(key);
+	}
+	else
+		ft_setenv(&shell->envp, arg, "");
 }
-int builtin_export(t_cmd *cmd, t_shell *shell)
-{
-    int i;
 
-    if (!cmd->argv[1])
-        return (print_exported_vars(shell->envp));
-    i = 1;
-    while (cmd->argv[i])
-    {
-        handle_export_arg(cmd->argv[i], shell);
-        i++;
-    }
-    return (0);
+int	builtin_export(t_cmd *cmd, t_shell *shell)
+{
+	int	i;
+
+	if (!cmd->argv[1])
+		return (print_exported_vars(shell->envp));
+	i = 1;
+	while (cmd->argv[i])
+	{
+		handle_export_arg(cmd->argv[i], shell);
+		i++;
+	}
+	return (0);
 }
