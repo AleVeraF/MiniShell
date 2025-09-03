@@ -6,7 +6,7 @@
 /*   By: alvera-f <alvera-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 18:22:24 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/03 19:06:47 by alvera-f         ###   ########.fr       */
+/*   Updated: 2025/09/03 19:46:01 by alvera-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void	sort_envp_custom(char **envp)
 	}
 }
 
-static char	**sort_envp(char **envp)
+char	**sort_envp(char **envp)
 {
 	int		count;
 	char	**copy;
@@ -66,7 +66,7 @@ static char	**sort_envp(char **envp)
 	return (copy);
 }
 
-static int	is_valid_identifier_aux(const char *str)
+int	is_valid_identifier_aux(const char *str)
 {
 	int	i;
 
